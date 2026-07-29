@@ -1,0 +1,149 @@
+/* --- RESET E ESTILOS GERAIS --- */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  background-color: #121214;
+  color: #e1e1e6;
+  padding-bottom: 50px;
+}
+
+/* --- CABEÇALHO --- */
+header {
+  background-color: #202024;
+  padding: 20px 8%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid #8257e5;
+}
+
+header h1 {
+  color: #8257e5;
+  font-size: 1.8rem;
+}
+
+/* --- CONTAINER PRINCIPAL --- */
+.container {
+  max-width: 1200px;
+  margin: 30px auto;
+  padding: 0 20px;
+}
+
+/* --- FORMULÁRIO DE ADICIONAR JOGO --- */
+.add-game-section {
+  background-color: #202024;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 40px;
+  border: 1px solid #29292e;
+}
+
+.add-game-section h2 {
+  margin-bottom: 15px;
+  color: #04d361;
+  font-size: 1.3rem;
+}
+
+.form-group {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+input {
+  padding: 12px;
+  border-radius: 5px;
+  border: 1px solid #29292e;
+  background-color: #121214;
+  color: #fff;
+  font-size: 0.9rem;
+}
+
+input:focus {
+  outline: 1px solid #8257e5;
+}
+
+.btn-submit {
+  background-color: #04d361;
+  color: #000;
+  font-weight: bold;
+  padding: 12px 25px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-submit:hover {
+  background-color: #00b352;
+}
+
+/* --- GRADE DE JOGOS (CATÁLOGO) --- */
+.games-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 25px;
+}
+
+.game-card {
+  background-color: #202024;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #29292e;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.game-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(130, 87, 229, 0.3);
+}
+
+.game-card img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  background-color: #29292e;
+}
+
+.game-info {
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  justify-content: space-between;
+}
+
+.game-title {
+  font-size: 1.1rem;
+  margin-bottom: 10px;
+}
+
+.game-price {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #04d361;
+  margin-bottom: 15px;
+}
+
+.btn-buy {
+  background-color: #8257e5;
+  color: #fff;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-buy:hover {
+  background-color: #996ed8;
+}

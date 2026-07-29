@@ -1,1 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pixel Vault | Sua Loja de Games</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
 
+  <header>
+    <h1>🎮 Pixel Vault</h1>
+    <span>Sua Loja de Jogos Indie</span>
+  </header>
+
+  <div class="container">
+    
+    <section class="add-game-section">
+      <h2>+ Anunciar Novo Jogo</h2>
+      <form id="gameForm">
+        <div class="form-group">
+          <input type="text" id="title" placeholder="Nome do Jogo" required>
+          <input type="number" id="price" step="0.01" placeholder="Preço (R$)" required>
+          <input type="url" id="imageUrl" placeholder="URL da Imagem PNG (ex: https://...)" required>
+        </div>
+        <button type="submit" class="btn-submit">Publicar para Venda</button>
+      </form>
+    </section>
+
+    <h2>Jogos em Destaque</h2>
+    <br>
+    <div class="games-grid" id="gamesGrid">
+      </div>
+
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
