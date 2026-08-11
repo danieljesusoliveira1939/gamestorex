@@ -30,7 +30,7 @@
     <h2 data-i18n="featuredTitle">Jogos em Destaque</h2>
     <br>
     <div class="games-grid" id="gamesGrid">
-      </div>
+    </div>
   </main>
 
   <main id="createGamePage" class="container page">
@@ -86,14 +86,14 @@
 
       <div class="divider"><span data-i18n="orDivider">ou</span></div>
 
-      <form id="loginForm" class="auth-form active-form" onsubmit="handleLogin(event)">
+      <form id="loginForm" class="auth-form active-form" method="POST" action="/login">
         <div class="form-group">
-          <label>E-mail</label>
-          <input type="email" id="loginEmail" placeholder="seuemail@exemplo.com" required>
+          <label>E-mail / Usuário</label>
+          <input type="text" name="username" id="loginEmail" placeholder="seuemail@exemplo.com" required>
         </div>
         <div class="form-group">
           <label>Senha</label>
-          <input type="password" id="loginPassword" placeholder="••••••••" required>
+          <input type="password" name="password" id="loginPassword" placeholder="••••••••" required>
         </div>
         <button type="submit" class="btn-submit" data-i18n="btnLogin">Acessar Conta</button>
       </form>
@@ -131,3 +131,9 @@
       </div>
 
       <hr class="modal-hr">
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
