@@ -42,9 +42,10 @@ body {
 }
 
 /* CABEÇALHO */
+
 header {
   background-color: var(--bg-secondary);
-  padding: 15px 8%;
+  padding: 10px 8%; /* Reduzido o padding para não ficar muito alto */
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -53,18 +54,29 @@ header {
 }
 
 .logo-area {
+  display: flex;
+  align-items: center;
+  gap: 15px; /* Espaçamento entre a imagem e o texto */
   cursor: pointer;
 }
 
-header h1 {
-  color: var(--accent-color);
-  font-size: 1.8rem;
+/* Regra principal para limitar o tamanho da imagem da logo */
+.site-logo {
+  width: 50px;            /* Largura fixa */
+  height: 50px;           /* Altura igual para manter o aspecto quadrado 1:1 */
+  object-fit: contain;    /* Mantém a proporção sem distorcer */
+  border-radius: 8px;     /* Opcional: cantos levemente arredondados */
 }
 
-.header-actions {
-  display: flex;
-  gap: 15px;
-  align-items: center;
+.logo-text h1 {
+  color: var(--accent-color);
+  font-size: 1.5rem;
+  line-height: 1.2;
+}
+
+.logo-text span {
+  font-size: 0.85rem;
+  color: var(--text-muted);
 }
 
 /* NAVEGAÇÃO DE PÁGINAS (SPA) */

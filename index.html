@@ -8,20 +8,23 @@
 </head>
 <body>
 
-  <header>
-    <div class="logo-area" onclick="showPage('storePage')">
-      <h1><img src="edited-photo.png" alt=""></h1>
+<header>
+  <div class="logo-area" onclick="showPage('storePage')">
+    <img src="edited-photo.png" alt="Game Store X Logo" class="site-logo">
+    <div class="logo-text">
+      <h1>Game Store X</h1>
       <span data-i18n="subtitle">Sua Loja Favorita de Jogos</span>
     </div>
+  </div>
 
-    <div class="header-actions">
-      <button class="btn-primary" onclick="showPage('createGamePage')" data-i18n="navAddGame">+ Anunciar Jogo</button>
-      
-      <div id="authArea">
-        <button class="btn-secondary" onclick="openModal('authModal')" data-i18n="loginBtn">Entrar / Registrar</button>
-      </div>
+  <div class="header-actions">
+    <button class="btn-primary" onclick="showPage('createGamePage')" data-i18n="navAddGame">+ Anunciar Jogo</button>
+    
+    <div id="authArea">
+      <button class="btn-secondary" onclick="openModal('authModal')" data-i18n="loginBtn">Entrar / Registrar</button>
     </div>
-  </header>
+  </div>
+</header>
 
   <main id="storePage" class="container page active-page">
     <h2 data-i18n="featuredTitle">Jogos em Destaque</h2>
