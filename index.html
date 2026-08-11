@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,31 +9,77 @@
 <body>
 
   <header>
-    <h1>🎮 Pixel Vault</h1>
-    <span>Sua Loja de Jogos Indie</span>
+    <div class="logo-area" onclick="showPage('storePage')">
+      <h1>🎮 Pixel Vault</h1>
+      <span data-i18n="subtitle">Sua Loja de Jogos Indie</span>
+    </div>
+
+    <div class="header-actions">
+      <button class="btn-primary" onclick="showPage('createGamePage')" data-i18n="navAddGame">+ Anunciar Jogo</button>
+      
+      <div id="authArea">
+        <button class="btn-secondary" onclick="openModal('authModal')" data-i18n="loginBtn">Entrar / Registrar</button>
+      </div>
+    </div>
   </header>
 
-  <div class="container">
-    
-    <section class="add-game-section">
-      <h2>+ Anunciar Novo Jogo</h2>
-      <form id="gameForm">
-        <div class="form-group">
-          <input type="text" id="title" placeholder="Nome do Jogo" required>
-          <input type="number" id="price" step="0.01" placeholder="Preço (R$)" required>
-          <input type="url" id="imageUrl" placeholder="URL da Imagem PNG (ex: https://...)" required>
-        </div>
-        <button type="submit" class="btn-submit">Publicar para Venda</button>
-      </form>
-    </section>
-
-    <h2>Jogos em Destaque</h2>
+  <main id="storePage" class="container page active-page">
+    <h2 data-i18n="featuredTitle">Jogos em Destaque</h2>
     <br>
     <div class="games-grid" id="gamesGrid">
       </div>
+  </main>
 
-  </div>
+  <main id="createGamePage" class="container page">
+    <div class="form-card">
+      <button class="btn-back" onclick="showPage('storePage')" data-i18n="backBtn">← Voltar para a Loja</button>
+      <h2 data-i18n="createGameTitle">Cadastrar Novo Jogo para Venda</h2>
+      <p data-i18n="createGameDesc">Preencha os detalhes do seu jogo para exibi-lo na vitrine da Pixel Vault.</p>
+      
+      <form id="gameForm">
+        <div class="form-group">
+          <label for="title" data-i18n="labelTitle">Nome do Jogo</label>
+          <input type="text" id="title" placeholder="Ex: Cyberpunk Quest" required>
+        </div>
 
-  <script src="script.js"></script>
-</body>
-</html>
+        <div class="form-group">
+          <label for="price" data-i18n="labelPrice">Preço (R$)</label>
+          <input type="number" id="price" step="0.01" placeholder="Ex: 59.90" required>
+        </div>
+
+        <div class="form-group">
+          <label for="imageUrl" data-i18n="labelImage">URL da Imagem PNG (Capa)</label>
+          <input type="url" id="imageUrl" placeholder="https://exemplo.com/imagem.png" required>
+        </div>
+
+        <div class="form-group">
+          <label for="description" data-i18n="labelDesc">Descrição Breve</label>
+          <textarea id="description" rows="4" placeholder="Conte um pouco sobre o jogo..."></textarea>
+        </div>
+
+        <button type="submit" class="btn-submit" data-i18n="btnPublish">Publicar Jogo</button>
+      </form>
+    </div>
+  </main>
+
+  <div id="authModal" class="modal">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeModal('authModal')">&times;</span>
+      <h2 data-i18n="authTitle">Acesse sua Conta</h2>
+      
+      <button class="btn-google" onclick="loginWithGoogle()">
+        <svg width="18" height="18" viewBox="0 0 24 24">
+          <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+          <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+          <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+          <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+        </svg>
+        <span data-i18n="googleLogin">Entrar com o Google</span>
+      </button>
+
+      <div class="divider"><span data-i18n="orDivider">ou</span></div>
+
+      <form id="loginForm" onsubmit="handleLogin(event)">
+        <input type="email" placeholder="E-mail" required>
+        <input type="password" placeholder="Senha" required>
+        <button
