@@ -10,83 +10,125 @@
 
   <header>
     <div class="logo-area" onclick="showPage('storePage')">
-      <img src="edited-photo.png" alt="Game Store X Logo" class="site-logo">
+      <img src="edited-photo.png" alt="Game Store X Logo" class="site-logo" onerror="this.src='https://via.placeholder.com/40/8257e5/ffffff?text=GX'">
       <div class="logo-text">
         <h1>Game Store X</h1>
-        <span data-i18n="subtitle">Sua Loja Favorita de Jogos</span>
+        <span>Sua Loja Favorita de Jogos</span>
       </div>
     </div>
 
+    <nav class="main-nav">
+      <button class="nav-btn active" onclick="showPage('storePage')">Loja</button>
+      <button class="nav-btn" onclick="showPage('libraryPage')">Biblioteca</button>
+      <button class="nav-btn" onclick="showPage('createGamePage')">+ Anunciar</button>
+    </nav>
+
     <div class="header-actions">
-      <button class="btn-primary" onclick="showPage('createGamePage')" data-i18n="navAddGame">+ Anunciar Jogo</button>
-      
+      <button class="btn-cart" onclick="openModal('cartModal')">
+        🛒 <span id="cartCount">0</span>
+      </button>
+
       <div id="authArea">
-        <button class="btn-secondary" onclick="showPage('authPage')" data-i18n="loginBtn">Entrar / Registrar</button>
+        <button class="btn-secondary" onclick="showPage('authPage')">Entrar / Registrar</button>
       </div>
     </div>
   </header>
 
   <main id="storePage" class="container page active-page">
-    <h2 data-i18n="featuredTitle">Jogos em Destaque</h2>
-    <br>
-    <div class="games-grid" id="gamesGrid">
-    </div>
+    
+    <section class="store-filter-bar">
+      <input type="text" id="searchInput" placeholder="Buscar jogos..." oninput="filterGames()">
+      
+      <select id="categoryFilter" onchange="filterGames()">
+        <option value="all">Todas as Categorias</option>
+        <option value="Ação">Ação</option>
+        <option value="RPG">RPG</option>
+        <option value="Estratégia">Estratégia</option>
+        <option value="Aventura">Aventura</option>
+      </select>
+
+      <select id="sortFilter" onchange="filterGames()">
+        <option value="default">Ordenar Por</option>
+        <option value="lowPrice">Menor Preço</option>
+        <option value="highPrice">Maior Preço</option>
+        <option value="name">Nome (A-Z)</option>
+      </select>
+    </section>
+
+    <h2>Jogos em Destaque</h2>
+    <div class="games-grid" id="gamesGrid"></div>
+  </main>
+
+  <main id="libraryPage" class="container page">
+    <h2>Minha Biblioteca</h2>
+    <p class="subtitle">Jogos adquiridos na sua conta</p>
+    <div class="games-grid" id="libraryGrid"></div>
   </main>
 
   <main id="createGamePage" class="container page">
     <div class="form-card">
-      <button class="btn-back" onclick="showPage('storePage')" data-i18n="backBtn">← Voltar para a Loja</button>
-      <h2 data-i18n="createGameTitle">Cadastrar Novo Jogo para Venda</h2>
-      <p data-i18n="createGameDesc">Preencha os detalhes do seu jogo para exibi-lo na vitrine da Game Store X.</p>
+      <button class="btn-back" onclick="showPage('storePage')">← Voltar para a Loja</button>
+      <h2>Cadastrar Novo Jogo para Venda</h2>
+      <p>Preencha os detalhes do jogo para exibi-lo na vitrine da Game Store X.</p>
       
-      <form id="gameForm">
+      <form id="gameForm" onsubmit="handleCreateGame(event)">
         <div class="form-group">
-          <label for="title" data-i18n="labelTitle">Nome do Jogo</label>
+          <label for="title">Nome do Jogo</label>
           <input type="text" id="title" placeholder="Ex: Cyberpunk Quest" required>
         </div>
 
         <div class="form-group">
-          <label for="price" data-i18n="labelPrice">Preço (R$)</label>
+          <label for="category">Categoria</label>
+          <select id="category" required>
+            <option value="Ação">Ação</option>
+            <option value="RPG">RPG</option>
+            <option value="Estratégia">Estratégia</option>
+            <option value="Aventura">Aventura</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="price">Preço (R$)</label>
           <input type="number" id="price" step="0.01" placeholder="Ex: 59.90" required>
         </div>
 
         <div class="form-group">
-          <label for="imageUrl" data-i18n="labelImage">URL da Imagem PNG (Capa)</label>
+          <label for="imageUrl">URL da Imagem (Capa)</label>
           <input type="url" id="imageUrl" placeholder="https://exemplo.com/imagem.png" required>
         </div>
 
         <div class="form-group">
-          <label for="description" data-i18n="labelDesc">Descrição Breve</label>
+          <label for="description">Descrição Breve</label>
           <textarea id="description" rows="4" placeholder="Conte um pouco sobre o jogo..."></textarea>
         </div>
 
-        <button type="submit" class="btn-submit" data-i18n="btnPublish">Publicar Jogo</button>
+        <button type="submit" class="btn-submit">Publicar Jogo</button>
       </form>
     </div>
   </main>
 
   <main id="authPage" class="container page">
     <div class="auth-card">
-      <button class="btn-back" onclick="showPage('storePage')" data-i18n="backBtn">← Voltar para a Loja</button>
+      <button class="btn-back" onclick="showPage('storePage')">← Voltar para a Loja</button>
 
       <div class="auth-tabs">
         <button class="tab-btn active" id="loginTabBtn" onclick="switchAuthTab('login')">Entrar</button>
         <button class="tab-btn" id="registerTabBtn" onclick="switchAuthTab('register')">Registrar</button>
       </div>
 
-      <button class="btn-google" onclick="loginWithGoogle()">
+      <button type="button" class="btn-google" onclick="handleGoogleLogin()">
         <svg width="18" height="18" viewBox="0 0 24 24">
           <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
           <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
           <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
           <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
         </svg>
-        <span data-i18n="googleLogin">Entrar com o Google</span>
+        <span>Entrar com o Google</span>
       </button>
 
-      <div class="divider"><span data-i18n="orDivider">ou</span></div>
+      <div class="divider"><span>ou</span></div>
 
-      <form id="loginForm" class="auth-form active-form" method="POST" action="/login">
+      <form id="loginForm" class="auth-form active-form" method="POST" action="/login" onsubmit="handleLogin(event)">
         <div class="form-group">
           <label>E-mail / Usuário</label>
           <input type="text" name="username" id="loginEmail" placeholder="seuemail@exemplo.com" required>
@@ -95,7 +137,7 @@
           <label>Senha</label>
           <input type="password" name="password" id="loginPassword" placeholder="••••••••" required>
         </div>
-        <button type="submit" class="btn-submit" data-i18n="btnLogin">Acessar Conta</button>
+        <button type="submit" class="btn-submit">Acessar Conta e Conectar</button>
       </form>
 
       <form id="registerForm" class="auth-form" onsubmit="handleRegister(event)">
@@ -116,21 +158,22 @@
     </div>
   </main>
 
-  <div id="settingsModal" class="modal">
+  <div id="cartModal" class="modal">
     <div class="modal-content">
-      <span class="close-btn" onclick="closeModal('settingsModal')">&times;</span>
-      <h2 data-i18n="settingsTitle">Configurações da Conta</h2>
-
-      <div class="profile-section">
-        <img id="profilePreview" src="https://via.placeholder.com/100/8257e5/ffffff?text=User" alt="Foto de Perfil">
-        <div class="profile-inputs">
-          <label data-i18n="labelProfilePic">URL da Foto de Perfil (PNG/JPG)</label>
-          <input type="url" id="profileUrlInput" placeholder="https://exemplo.com/minha-foto.png">
-          <button class="btn-secondary" onclick="updateProfilePic()" data-i18n="btnSavePic">Salvar Foto</button>
-        </div>
+      <span class="close-btn" onclick="closeModal('cartModal')">&times;</span>
+      <h2>Seu Carrinho</h2>
+      <div id="cartItemsList"></div>
+      <div class="cart-summary">
+        <h3>Total: R$ <span id="cartTotal">0.00</span></h3>
+        <button class="btn-submit" onclick="checkoutCart()">Finalizar Compra</button>
       </div>
+    </div>
+  </div>
 
-      <hr class="modal-hr">
+  <div id="gameDetailModal" class="modal">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeModal('gameDetailModal')">&times;</span>
+      <div id="gameDetailContent"></div>
     </div>
   </div>
 
