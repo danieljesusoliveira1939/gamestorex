@@ -316,3 +316,11 @@ input, textarea, select {
   object-fit: cover;
   border: 2px solid var(--accent-color);
 }
+
+body {
+  background-image: url('background_image.png');
+  background-size: cover;       /* Faz a imagem cobrir toda a tela */
+  background-position: center;  /* Centraliza a imagem */
+  background-repeat: no-repeat; /* Evita que a imagem se repita */
+  background-attachment: fixed; /* Mantém o fundo fixo ao rolar */
+}
