@@ -135,8 +135,11 @@ function handleLogin(e) {
 }
 
 function loginWithGoogle() {
-  closeModal('authModal');
-  setupLoggedInUser("https://via.placeholder.com/100/04d361/ffffff?text=G");
+  // Verifica se o login está rodando dentro do captive portal do celular
+  alert("Para entrar com o Google, certifique-se de abrir esta página no navegador do seu celular (Chrome ou Safari).");
+  
+  // Redireciona para o fluxo OAuth do Google (se configurado no seu servidor backend)
+  window.location.href = "https://accounts.google.com/o/oauth2/v2/auth?...";
 }
 
 function setupLoggedInUser(avatarUrl) {
