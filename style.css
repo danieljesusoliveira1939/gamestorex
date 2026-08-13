@@ -322,3 +322,20 @@ header {
 .auth-form { display: none; }
 .active-form { display: flex; flex-direction: column; }
   
+/* Botão de Excluir Jogo */
+.btn-delete {
+  background-color: rgba(255, 77, 77, 0.15);
+  border: 1px solid #ff4d4d;
+  color: #ff4d4d;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.2s, transform 0.2s;
+}
+
+.btn-delete:hover {
+  background-color: #ff4d4d;
+  color: #fff;
+  transform: scale(1.05);
+  }
