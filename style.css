@@ -1,175 +1,189 @@
-/* --- VARIÁVEIS DE TEMA (DARK MODE COMO PADRÃO) --- */
 :root {
-  --bg-primary: #121214;
-  --bg-secondary: #202024;
-  --bg-input: #121214;
-  --text-color: #e1e1e6;
-  --text-muted: #a8a8b3;
-  --accent-color: #8257e5;
-  --accent-hover: #996ed8;
-  --success-color: #04d361;
-  --border-color: #29292e;
-  --card-shadow: rgba(0, 0, 0, 0.5);
+  --bg-dark: #0f1218;
+  --bg-card: #181d26;
+  --bg-header: #13171f;
+  --accent-purple: #8257e5;
+  --accent-blue: #00d4ff;
+  --accent-green: #00e676;
+  --text-main: #f0f2f5;
+  --text-muted: #94a3b8;
+  --border-color: #2a3241;
 }
 
-/* TEMA CLARO (LIGHT MODE) */
-[data-theme="light"] {
-  --bg-primary: #f8f9fa;
-  --bg-secondary: #ffffff;
-  --bg-input: #f1f3f5;
-  --text-color: #1c1e21;
-  --text-muted: #606770;
-  --accent-color: #6200ee;
-  --accent-hover: #7c22ff;
-  --success-color: #12a454;
-  --border-color: #e4e6eb;
-  --card-shadow: rgba(0, 0, 0, 0.1);
-}
-
-/* RESET E ESTILOS GERAIS */
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  transition: background-color 0.3s, color 0.3s;
 }
 
 body {
-  background-color: var(--bg-primary);
-  color: var(--text-color);
-  padding-bottom: 50px;
+  background-color: var(--bg-dark);
+  color: var(--text-main);
+  min-height: 100vh;
 }
 
-/* CABEÇALHO */
-
+/* Header */
 header {
-  background-color: var(--bg-secondary);
-  padding: 10px 8%; /* Reduzido o padding para não ficar muito alto */
+  background-color: var(--bg-header);
+  border-bottom: 1px solid var(--border-color);
+  padding: 12px 30px;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  border-bottom: 2px solid var(--accent-color);
-  box-shadow: 0 2px 10px var(--card-shadow);
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
 
 .logo-area {
   display: flex;
   align-items: center;
-  gap: 15px; /* Espaçamento entre a imagem e o texto */
+  gap: 12px;
   cursor: pointer;
 }
 
-/* Regra principal para limitar o tamanho da imagem da logo */
 .site-logo {
-  width: 50px;            /* Largura fixa */
-  height: 50px;           /* Altura igual para manter o aspecto quadrado 1:1 */
-  object-fit: contain;    /* Mantém a proporção sem distorcer */
-  border-radius: 8px;     /* Opcional: cantos levemente arredondados */
+  width: 42px;
+  height: 42px;
+  border-radius: 8px;
 }
 
 .logo-text h1 {
-  color: var(--accent-color);
-  font-size: 1.5rem;
-  line-height: 1.2;
+  font-size: 1.2rem;
+  color: #fff;
+  background: linear-gradient(90deg, #fff, var(--accent-blue));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .logo-text span {
-  font-size: 0.85rem;
+  font-size: 0.75rem;
   color: var(--text-muted);
 }
 
-/* NAVEGAÇÃO DE PÁGINAS (SPA) */
-.page {
-  display: none;
+.main-nav {
+  display: flex;
+  gap: 10px;
 }
 
-.active-page {
-  display: block;
+.nav-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  padding: 8px 16px;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: 0.2s;
 }
 
-.container {
-  max-width: 1200px;
-  margin: 30px auto;
-  padding: 0 20px;
+.nav-btn:hover, .nav-btn.active {
+  color: #fff;
+  background-color: var(--border-color);
 }
 
-/* BOTÕES GERAIS */
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.btn-cart {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  color: #fff;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
 .btn-primary {
-  background-color: var(--accent-color);
+  background: linear-gradient(135deg, var(--accent-purple), #633bbc);
   color: #fff;
   border: none;
   padding: 10px 18px;
-  border-radius: 5px;
+  border-radius: 8px;
   font-weight: bold;
   cursor: pointer;
+  transition: transform 0.2s, opacity 0.2s;
 }
 
 .btn-primary:hover {
-  background-color: var(--accent-hover);
+  opacity: 0.9;
+  transform: translateY(-2px);
 }
 
 .btn-secondary {
   background-color: transparent;
-  color: var(--text-color);
   border: 1px solid var(--border-color);
-  padding: 10px 18px;
-  border-radius: 5px;
-  font-weight: bold;
+  color: var(--text-main);
+  padding: 8px 14px;
+  border-radius: 8px;
   cursor: pointer;
 }
 
-.btn-secondary:hover {
-  background-color: var(--border-color);
+/* Layout Geral */
+.container {
+  max-width: 1200px;
+  margin: 25px auto;
+  padding: 0 20px;
 }
 
-.btn-submit {
-  background-color: var(--success-color);
+.page { display: none; }
+.active-page { display: block; }
+
+/* Filtros */
+.store-filter-bar {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 25px;
+  background: var(--bg-card);
+  padding: 15px;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+}
+
+.store-filter-bar input, .store-filter-bar select, .form-group input, .form-group select, .form-group textarea {
+  background: var(--bg-dark);
+  border: 1px solid var(--border-color);
   color: #fff;
-  font-weight: bold;
-  padding: 12px 25px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  width: 100%;
+  padding: 10px 14px;
+  border-radius: 8px;
+  outline: none;
 }
 
-.btn-back {
-  background: none;
-  border: none;
-  color: var(--accent-color);
-  font-size: 1rem;
-  cursor: pointer;
-  margin-bottom: 15px;
-  font-weight: bold;
-}
+.store-filter-bar input { flex-grow: 1; }
 
-/* VITRINE DE JOGOS */
+/* Grid de Jogos */
 .games-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 25px;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 20px;
 }
 
 .game-card {
-  background-color: var(--bg-secondary);
-  border-radius: 8px;
+  background: var(--bg-card);
+  border-radius: 12px;
   overflow: hidden;
   border: 1px solid var(--border-color);
+  transition: 0.3s;
   display: flex;
   flex-direction: column;
 }
 
 .game-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 5px 15px var(--card-shadow);
+  border-color: var(--accent-purple);
+  box-shadow: 0 8px 20px rgba(130, 87, 229, 0.2);
 }
 
 .game-card img {
   width: 100%;
-  height: 180px;
+  height: 160px;
   object-fit: cover;
-  background-color: var(--border-color);
+  cursor: pointer;
 }
 
 .game-info {
@@ -177,150 +191,134 @@ header {
   display: flex;
   flex-direction: column;
   flex-grow: 1;
-  justify-content: space-between;
-}
-
-.game-title {
-  font-size: 1.1rem;
-  margin-bottom: 8px;
-}
-
-.game-desc {
-  font-size: 0.85rem;
-  color: var(--text-muted);
-  margin-bottom: 12px;
-}
-
-.game-price {
-  font-size: 1.2rem;
-  font-weight: bold;
-  color: var(--success-color);
-  margin-bottom: 15px;
-}
-
-/* FORMULÁRIO DEDICADO */
-.form-card {
-  background-color: var(--bg-secondary);
-  padding: 30px;
-  border-radius: 8px;
-  border: 1px solid var(--border-color);
-  max-width: 600px;
-  margin: 0 auto;
-}
-
-.form-group {
-  margin-bottom: 20px;
-  display: flex;
-  flex-direction: column;
   gap: 8px;
 }
 
-input, textarea, select {
-  padding: 12px;
-  border-radius: 5px;
-  border: 1px solid var(--border-color);
-  background-color: var(--bg-input);
-  color: var(--text-color);
-  font-size: 0.9rem;
+.badge {
+  background: rgba(0, 212, 255, 0.15);
+  color: var(--accent-blue);
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  width: fit-content;
 }
 
-/* MODAIS */
+.badge.free {
+  background: rgba(0, 230, 118, 0.15);
+  color: var(--accent-green);
+}
+
+.price {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: var(--accent-green);
+  margin-top: auto;
+}
+
+/* Cards & Modais */
 .modal {
   display: none;
   position: fixed;
-  top: 0; left: 0; width: 100%; height: 100%;
-  background-color: rgba(0, 0, 0, 0.7);
-  justify-content: center;
-  align-items: center;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+  backdrop-filter: blur(5px);
   z-index: 1000;
 }
 
 .modal-content {
-  background-color: var(--bg-secondary);
+  background: var(--bg-card);
+  width: 90%;
+  max-width: 800px;
+  margin: 40px auto;
+  border-radius: 16px;
   padding: 25px;
-  border-radius: 8px;
-  width: 100%;
-  max-width: 420px;
-  position: relative;
   border: 1px solid var(--border-color);
+  position: relative;
+  max-height: 90vh;
+  overflow-y: auto;
 }
 
 .close-btn {
   position: absolute;
-  top: 15px; right: 20px;
-  font-size: 1.5rem;
+  top: 15px;
+  right: 20px;
+  font-size: 1.8rem;
+  color: var(--text-muted);
   cursor: pointer;
 }
 
+/* Telas Form */
+.form-card, .auth-card {
+  background: var(--bg-card);
+  max-width: 500px;
+  margin: 30px auto;
+  padding: 30px;
+  border-radius: 16px;
+  border: 1px solid var(--border-color);
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 15px;
+}
+
+.btn-submit {
+  width: 100%;
+  background: var(--accent-green);
+  color: #000;
+  font-weight: bold;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.auth-tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.tab-btn {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  padding: 10px;
+  border-bottom: 2px solid var(--border-color);
+  cursor: pointer;
+}
+
+.tab-btn.active {
+  color: var(--accent-purple);
+  border-color: var(--accent-purple);
+  font-weight: bold;
+}
+
 .btn-google {
+  width: 100%;
+  background: #fff;
+  color: #000;
+  border: none;
+  padding: 10px;
+  border-radius: 8px;
+  font-weight: 600;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
-  width: 100%;
-  padding: 12px;
-  background-color: #fff;
-  color: #333;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-weight: bold;
   cursor: pointer;
-  margin: 15px 0;
 }
 
 .divider {
   text-align: center;
   margin: 15px 0;
-  border-bottom: 1px solid var(--border-color);
-  line-height: 0.1em;
-}
-
-.divider span {
-  background: var(--bg-secondary);
-  padding: 0 10px;
   color: var(--text-muted);
 }
 
-.profile-section {
-  display: flex;
-  gap: 15px;
-  align-items: center;
-  margin-top: 15px;
-}
-
-.profile-section img {
-  width: 70px;
-  height: 70px;
-  border-radius: 50%;
-  object-fit: cover;
-}
-
-.modal-hr {
-  margin: 20px 0;
-  border: 0;
-  border-top: 1px solid var(--border-color);
-}
-
-.setting-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 15px;
-}
-
-.user-avatar-btn {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  cursor: pointer;
-  object-fit: cover;
-  border: 2px solid var(--accent-color);
-}
-
-body {
-  background-image: url('background_image.png');
-  background-size: cover;       /* Faz a imagem cobrir toda a tela */
-  background-position: center;  /* Centraliza a imagem */
-  background-repeat: no-repeat; /* Evita que a imagem se repita */
-  background-attachment: fixed; /* Mantém o fundo fixo ao rolar */
-}
+.auth-form { display: none; }
+.active-form { display: flex; flex-direction: column; }
+  
