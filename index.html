@@ -18,9 +18,9 @@
     </div>
 
     <nav class="main-nav">
-      <button class="nav-btn active" onclick="showPage('storePage')">Loja</button>
-      <button class="nav-btn" onclick="showPage('libraryPage')">Biblioteca</button>
-      <button class="nav-btn" onclick="showPage('createGamePage')">+ Anunciar</button>
+      <button class="nav-btn active" id="navStore" onclick="showPage('storePage')">Loja</button>
+      <button class="nav-btn" id="navLib" onclick="showPage('libraryPage')">Minha Biblioteca</button>
+      <button class="nav-btn" id="navAdd" onclick="showPage('createGamePage')">+ Anunciar</button>
     </nav>
 
     <div class="header-actions">
@@ -35,81 +35,74 @@
   </header>
 
   <main id="storePage" class="container page active-page">
-    
     <section class="store-filter-bar">
-      <input type="text" id="searchInput" placeholder="Buscar jogos..." oninput="filterGames()">
-      
+      <input type="text" id="searchInput" placeholder="Pesquisar jogos..." oninput="filterGames()">
       <select id="categoryFilter" onchange="filterGames()">
         <option value="all">Todas as Categorias</option>
-        <option value="Ação">Ação</option>
         <option value="RPG">RPG</option>
+        <option value="Ação">Ação</option>
         <option value="Estratégia">Estratégia</option>
-        <option value="Aventura">Aventura</option>
       </select>
-
       <select id="sortFilter" onchange="filterGames()">
         <option value="default">Ordenar Por</option>
         <option value="lowPrice">Menor Preço</option>
         <option value="highPrice">Maior Preço</option>
-        <option value="name">Nome (A-Z)</option>
       </select>
     </section>
 
     <h2>Jogos em Destaque</h2>
+    <br>
     <div class="games-grid" id="gamesGrid"></div>
   </main>
 
   <main id="libraryPage" class="container page">
-    <h2>Minha Biblioteca</h2>
-    <p class="subtitle">Jogos adquiridos na sua conta</p>
+    <h2>Minha Biblioteca de Jogos</h2>
+    <p style="color: var(--text-muted); margin-bottom: 20px;">Seus jogos adquiridos e prontos para jogar diretamente no navegador:</p>
     <div class="games-grid" id="libraryGrid"></div>
   </main>
 
   <main id="createGamePage" class="container page">
     <div class="form-card">
-      <button class="btn-back" onclick="showPage('storePage')">← Voltar para a Loja</button>
-      <h2>Cadastrar Novo Jogo para Venda</h2>
-      <p>Preencha os detalhes do jogo para exibi-lo na vitrine da Game Store X.</p>
-      
+      <button class="btn-secondary" onclick="showPage('storePage')" style="margin-bottom: 15px;">← Voltar</button>
+      <h2>Cadastrar Jogo na Vitrine</h2>
+      <br>
       <form id="gameForm" onsubmit="handleCreateGame(event)">
         <div class="form-group">
-          <label for="title">Nome do Jogo</label>
+          <label>Nome do Jogo</label>
           <input type="text" id="title" placeholder="Ex: Cyberpunk Quest" required>
         </div>
-
         <div class="form-group">
-          <label for="category">Categoria</label>
+          <label>Categoria</label>
           <select id="category" required>
-            <option value="Ação">Ação</option>
             <option value="RPG">RPG</option>
+            <option value="Ação">Ação</option>
             <option value="Estratégia">Estratégia</option>
-            <option value="Aventura">Aventura</option>
           </select>
         </div>
-
         <div class="form-group">
-          <label for="price">Preço (R$)</label>
-          <input type="number" id="price" step="0.01" placeholder="Ex: 59.90" required>
+          <label>Preço (R$) - Digite 0 para Grátis</label>
+          <input type="number" id="price" step="0.01" placeholder="Ex: 29.90" required>
         </div>
-
         <div class="form-group">
-          <label for="imageUrl">URL da Imagem (Capa)</label>
+          <label>URL da Imagem de Capa</label>
           <input type="url" id="imageUrl" placeholder="https://exemplo.com/imagem.png" required>
         </div>
-
         <div class="form-group">
-          <label for="description">Descrição Breve</label>
-          <textarea id="description" rows="4" placeholder="Conte um pouco sobre o jogo..."></textarea>
+          <label>URL do Jogo Web (Para ser Jogável)</label>
+          <input type="url" id="gameUrl" placeholder="https://exemplo.com/jogo-web" required>
         </div>
-
-        <button type="submit" class="btn-submit">Publicar Jogo</button>
+        <div class="form-group">
+          <label>Descrição</label>
+          <textarea id="description" rows="3" placeholder="Conte um pouco sobre o jogo..."></textarea>
+        </div>
+        <button type="submit" class="btn-submit">Anunciar Jogo</button>
       </form>
     </div>
   </main>
 
   <main id="authPage" class="container page">
     <div class="auth-card">
-      <button class="btn-back" onclick="showPage('storePage')">← Voltar para a Loja</button>
+      <button class="btn-secondary" onclick="showPage('storePage')" style="margin-bottom: 15px;">← Voltar</button>
 
       <div class="auth-tabs">
         <button class="tab-btn active" id="loginTabBtn" onclick="switchAuthTab('login')">Entrar</button>
@@ -117,13 +110,8 @@
       </div>
 
       <button type="button" class="btn-google" onclick="handleGoogleLogin()">
-        <svg width="18" height="18" viewBox="0 0 24 24">
-          <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-          <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-          <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
-          <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
-        </svg>
-        <span>Entrar com o Google</span>
+        <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/></svg>
+        Entrar com o Google
       </button>
 
       <div class="divider"><span>ou</span></div>
@@ -137,7 +125,7 @@
           <label>Senha</label>
           <input type="password" name="password" id="loginPassword" placeholder="••••••••" required>
         </div>
-        <button type="submit" class="btn-submit">Acessar Conta e Conectar</button>
+        <button type="submit" class="btn-submit">Acessar e Conectar Wi-Fi</button>
       </form>
 
       <form id="registerForm" class="auth-form" onsubmit="handleRegister(event)">
@@ -150,7 +138,7 @@
           <input type="email" id="regEmail" placeholder="seuemail@exemplo.com" required>
         </div>
         <div class="form-group">
-          <label>Criar Senha</label>
+          <label>Senha</label>
           <input type="password" id="regPassword" placeholder="Mínimo 6 caracteres" minlength="6" required>
         </div>
         <button type="submit" class="btn-submit">Criar Conta</button>
@@ -162,21 +150,21 @@
     <div class="modal-content">
       <span class="close-btn" onclick="closeModal('cartModal')">&times;</span>
       <h2>Seu Carrinho</h2>
+      <br>
       <div id="cartItemsList"></div>
-      <div class="cart-summary">
+      <br>
+      <div style="display: flex; justify-content: space-between; align-items: center;">
         <h3>Total: R$ <span id="cartTotal">0.00</span></h3>
-        <button class="btn-submit" onclick="checkoutCart()">Finalizar Compra</button>
+        <button class="btn-submit" style="width: auto; padding: 10px 20px;" onclick="checkoutWithInterPix()">Pagar via Pix (Banco Inter)</button>
       </div>
     </div>
   </div>
 
   <div id="gameDetailModal" class="modal">
-    <div class="modal-content">
-      <span class="close-btn" onclick="closeModal('gameDetailModal')">&times;</span>
-      <div id="gameDetailContent"></div>
-    </div>
+    <div class="modal-content" id="gameDetailContent"></div>
   </div>
 
   <script src="script.js"></script>
 </body>
-</html>
+          </html>
+  
