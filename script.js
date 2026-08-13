@@ -4,10 +4,10 @@ const API_URL = 'http://localhost:3000/api';
 let games = JSON.parse(localStorage.getItem('gx_games')) || [
   {
     id: 100,
-    title: 'Shattered Pixel Dungeon',
-    category: 'RPG',
+    title: 'Eaglercraft',
+    category: 'Aventura',
     price: 0.00,
-    image: 'eagler_logo.png',
+    image: 'image.png',
     description: 'Um jogo de aventura e adrenalina',
     game_url: 'https://sandlersite.neocities.org/EaglercraftX_1.8_u29_Offline_Signed'
   }
