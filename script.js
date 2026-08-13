@@ -1,26 +1,52 @@
-// --- ESTADO DA APLICAÇÃO ---
+const API_URL = 'http://localhost:3000/api';
+
+// Estado local inicializado com Shattered Pixel Dungeon
 let games = JSON.parse(localStorage.getItem('gx_games')) || [
-  { id: 1, title: 'Cyberpunk Quest', category: 'RPG', price: 129.90, image: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=500', description: 'Explore uma cidade futurista recheada de ação e tecnologia.' },
-  { id: 2, title: 'Space Strategy X', category: 'Estratégia', price: 79.90, image: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=500', description: 'Domine a galáxia construindo frotas e conquistando planetas.' },
-  { id: 3, title: 'Warrior Legends', category: 'Ação', price: 49.90, image: 'https://images.unsplash.com/photo-1538481199705-c710c4e965fc?w=500', description: 'Batalhas épicas em um mundo medieval sombrio.' }
+  {
+    id: 100,
+    title: 'Shattered Pixel Dungeon',
+    category: 'RPG',
+    price: 0.00,
+    image: 'https://raw.githubusercontent.com/00-Evan/shattered-pixel-dungeon/master/android/res/drawable-nodpi/banner.png',
+    description: 'Um RPG roguelike tradicional de masmorras incrivelmente divertido e completo para jogar diretamente no navegador!',
+    game_url: 'https://pux0r3.github.io/shattered-pixel-dungeonweb/'
+  }
 ];
 
 let cart = JSON.parse(localStorage.getItem('gx_cart')) || [];
 let myLibrary = JSON.parse(localStorage.getItem('gx_library')) || [];
 let currentUser = JSON.parse(localStorage.getItem('gx_user')) || null;
 
-// --- INICIALIZAÇÃO ---
 document.addEventListener('DOMContentLoaded', () => {
+  fetchGamesFromBackend();
   renderGames(games);
   updateCartUI();
   updateAuthUI();
 });
 
-// --- NAVEGAÇÃO ENTRE PÁGINAS ---
+// Buscar do Servidor / Banco de Dados
+async function fetchGamesFromBackend() {
+  try {
+    const res = await fetch(`${API_URL}/games`);
+    if (res.ok) {
+      const dbGames = await res.json();
+      if (dbGames.length > 0) {
+        games = dbGames;
+        renderGames(games);
+      }
+    }
+  } catch (err) {
+    console.log("Servidor local não respondendo, carregando banco local...");
+  }
+}
+
+// Navegação
 function showPage(pageId) {
-  document.querySelectorAll('.page').forEach(page => page.classList.remove('active-page'));
-  const targetPage = document.getElementById(pageId);
-  if (targetPage) targetPage.classList.add('active-page');
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active-page'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  
+  const page = document.getElementById(pageId);
+  if (page) page.classList.add('active-page');
 
   if (pageId === 'libraryPage') renderLibrary();
 }
@@ -32,29 +58,24 @@ function switchAuthTab(tab) {
   document.getElementById('registerTabBtn').classList.toggle('active', tab === 'register');
 }
 
-// --- RENDEREZAÇÃO DA VITRINE E FILTROS ---
-function renderGames(gamesList) {
+// Vitrine
+function renderGames(list) {
   const grid = document.getElementById('gamesGrid');
   grid.innerHTML = '';
 
-  if (gamesList.length === 0) {
-    grid.innerHTML = '<p>Nenhum jogo encontrado.</p>';
-    return;
-  }
-
-  gamesList.forEach(game => {
-    const card = document.createElement('div');
-    card.className = 'game-card';
-    card.innerHTML = `
-      <img src="${game.image}" alt="${game.title}" onclick="openGameDetail(${game.id})">
-      <div class="game-info">
-        <h3>${game.title}</h3>
-        <span class="badge">${game.category}</span>
-        <p class="price">R$ ${game.price.toFixed(2)}</p>
-        <button class="btn-primary" onclick="addToCart(${game.id})">Adicionar ao Carrinho</button>
+  list.forEach(game => {
+    const isFree = game.price === 0;
+    grid.innerHTML += `
+      <div class="game-card">
+        <img src="${game.image}" alt="${game.title}" onclick="openGameDetail(${game.id})">
+        <div class="game-info">
+          <span class="badge ${isFree ? 'free' : ''}">${game.category}</span>
+          <h3>${game.title}</h3>
+          <p class="price">${isFree ? 'GRÁTIS' : 'R$ ' + game.price.toFixed(2)}</p>
+          <button class="btn-primary" onclick="addToCart(${game.id})">${isFree ? 'Resgatar Grátis' : 'Adicionar ao Carrinho'}</button>
+        </div>
       </div>
     `;
-    grid.appendChild(card);
   });
 }
 
@@ -64,35 +85,39 @@ function filterGames() {
   const sort = document.getElementById('sortFilter').value;
 
   let filtered = games.filter(g => {
-    const matchesSearch = g.title.toLowerCase().includes(search);
-    const matchesCategory = category === 'all' || g.category === category;
-    return matchesSearch && matchesCategory;
+    return g.title.toLowerCase().includes(search) && (category === 'all' || g.category === category);
   });
 
-  if (sort === 'lowPrice') filtered.sort((a, b) => a.price - b.price);
-  if (sort === 'highPrice') filtered.sort((a, b) => b.price - a.price);
-  if (sort === 'name') filtered.sort((a, b) => a.title.localeCompare(b.title));
+  if (sort === 'lowPrice') filtered.sort((a,b) => a.price - b.price);
+  if (sort === 'highPrice') filtered.sort((a,b) => b.price - a.price);
 
   renderGames(filtered);
 }
 
-// --- CARRINHO DE COMPRAS ---
+// Carrinho
 function addToCart(gameId) {
   const game = games.find(g => g.id === gameId);
-  if (game && !cart.some(item => item.id === gameId)) {
+  if (!game) return;
+
+  // Se o jogo for grátis, adiciona direto na biblioteca sem passar pelo Pix
+  if (game.price === 0) {
+    if (!myLibrary.some(item => item.id === game.id)) {
+      myLibrary.push(game);
+      localStorage.setItem('gx_library', JSON.stringify(myLibrary));
+      alert(`"${game.title}" foi adicionado gratuitamente à sua Biblioteca!`);
+      showPage('libraryPage');
+    } else {
+      alert('Este jogo já está na sua biblioteca!');
+    }
+    return;
+  }
+
+  if (!cart.some(item => item.id === gameId)) {
     cart.push(game);
     saveCart();
     updateCartUI();
-    alert(`"${game.title}" foi adicionado ao seu carrinho!`);
-  } else {
-    alert('Este jogo já está no seu carrinho.');
+    alert(`"${game.title}" foi adicionado ao carrinho!`);
   }
-}
-
-function removeFromCart(gameId) {
-  cart = cart.filter(item => item.id !== gameId);
-  saveCart();
-  updateCartUI();
 }
 
 function updateCartUI() {
@@ -104,9 +129,9 @@ function updateCartUI() {
   cart.forEach(item => {
     total += item.price;
     cartList.innerHTML += `
-      <div class="cart-item">
-        <span>${item.title} - R$ ${item.price.toFixed(2)}</span>
-        <button class="btn-remove" onclick="removeFromCart(${item.id})">Remover</button>
+      <div style="display:flex; justify-content:space-between; margin-bottom:10px; background:var(--bg-dark); padding:10px; border-radius:8px;">
+        <span>${item.title}</span>
+        <strong>R$ ${item.price.toFixed(2)}</strong>
       </div>
     `;
   });
@@ -114,35 +139,76 @@ function updateCartUI() {
   document.getElementById('cartTotal').innerText = total.toFixed(2);
 }
 
-function checkoutCart() {
-  if (cart.length === 0) return alert('Seu carrinho está vazio.');
-  if (!currentUser) {
-    closeModal('cartModal');
-    showPage('authPage');
-    return alert('Faça login para concluir a compra.');
-  }
+function saveCart() { localStorage.setItem('gx_cart', JSON.stringify(cart)); }
 
+// PAGAMENTO BANCO INTER (PIX COM CHAVE E-MAIL DANIELJESUSDEO@GMAIL.COM)
+async function checkoutWithInterPix() {
+  if (cart.length === 0) return alert('Seu carrinho está vazio.');
+  const total = cart.reduce((sum, item) => sum + item.price, 0);
+
+  try {
+    const res = await fetch(`${API_URL}/checkout/inter-pix`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ amount: total })
+    });
+    const data = await res.json();
+
+    closeModal('cartModal');
+    showPixPaymentModal(data.pixKey, data.qrCodeUrl, total);
+  } catch (err) {
+    alert("Erro ao conectar com o gateway do Banco Inter.");
+  }
+}
+
+function showPixPaymentModal(pixKey, qrCodeUrl, amount) {
+  const content = document.getElementById('gameDetailContent');
+  content.innerHTML = `
+    <span class="close-btn" onclick="closeModal('gameDetailModal')">&times;</span>
+    <h2 style="text-align:center;">Pagamento via Pix (Banco Inter)</h2>
+    <p style="text-align:center; color:var(--text-muted); margin-top:5px;">Chave Pix: <strong>${pixKey}</strong></p>
+    
+    <div style="text-align: center; margin: 20px 0;">
+      <img src="${qrCodeUrl}" style="width: 220px; height: 220px; border-radius:12px; border: 4px solid var(--accent-purple);">
+      <h3 style="margin-top:10px; color:var(--accent-green);">Valor: R$ ${amount.toFixed(2)}</h3>
+    </div>
+
+    <div class="form-group">
+      <label>Chave Pix Copia e Cola / E-mail:</label>
+      <input type="text" id="pixKeyInput" value="${pixKey}" readonly>
+    </div>
+    <button class="btn-primary" style="width:100%;" onclick="copyPixKey()">Copiar Chave Pix</button>
+    <br><br>
+    <button class="btn-submit" onclick="confirmPaymentAndRelease()">Já Realizei o Pagamento</button>
+  `;
+  openModal('gameDetailModal');
+}
+
+function copyPixKey() {
+  const input = document.getElementById('pixKeyInput');
+  input.select();
+  document.execCommand('copy');
+  alert("Chave Pix (danieljesusdeo@gmail.com) copiada com sucesso!");
+}
+
+function confirmPaymentAndRelease() {
   myLibrary.push(...cart);
   localStorage.setItem('gx_library', JSON.stringify(myLibrary));
   cart = [];
   saveCart();
   updateCartUI();
-  closeModal('cartModal');
-  alert('Compra realizada com sucesso! Os jogos estão disponíveis na sua Biblioteca.');
+  closeModal('gameDetailModal');
+  alert("Pagamento confirmado! Jogos liberados na sua Biblioteca.");
   showPage('libraryPage');
 }
 
-function saveCart() {
-  localStorage.setItem('gx_cart', JSON.stringify(cart));
-}
-
-// --- BIBLIOTECA DE JOGOS ---
+// BIBLIOTECA E PLAYER DE JOGOS
 function renderLibrary() {
   const grid = document.getElementById('libraryGrid');
   grid.innerHTML = '';
 
   if (myLibrary.length === 0) {
-    grid.innerHTML = '<p>Você ainda não possui nenhum jogo na biblioteca.</p>';
+    grid.innerHTML = '<p>Sua biblioteca está vazia.</p>';
     return;
   }
 
@@ -152,25 +218,39 @@ function renderLibrary() {
         <img src="${game.image}" alt="${game.title}">
         <div class="game-info">
           <h3>${game.title}</h3>
-          <button class="btn-secondary" onclick="alert('Iniciando o download de ${game.title}...')">Baixar / Jogar</button>
+          <button class="btn-primary" onclick="playGame('${game.game_url}', '${game.title}')">▶ JOGAR AGORA</button>
         </div>
       </div>
     `;
   });
 }
 
-// --- MODAIS E DETALHES DO JOGO ---
-function openGameDetail(gameId) {
-  const game = games.find(g => g.id === gameId);
-  if (!game) return;
-
+function playGame(url, title) {
   const content = document.getElementById('gameDetailContent');
   content.innerHTML = `
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+      <h2>${title}</h2>
+      <button class="btn-secondary" onclick="closeModal('gameDetailModal')">✖ Fechar Jogo</button>
+    </div>
+    <div style="width:100%; height:75vh; border-radius:12px; overflow:hidden; border: 1px solid var(--border-color);">
+      <iframe src="${url}" style="width:100%; height:100%; border:none;" allow="fullscreen; autoplay"></iframe>
+    </div>
+  `;
+  openModal('gameDetailModal');
+}
+
+function openGameDetail(id) {
+  const game = games.find(g => g.id === id);
+  if (!game) return;
+  const content = document.getElementById('gameDetailContent');
+  content.innerHTML = `
+    <span class="close-btn" onclick="closeModal('gameDetailModal')">&times;</span>
     <h2>${game.title}</h2>
-    <img src="${game.image}" style="width:100%; border-radius:8px; margin: 10px 0;">
-    <p><strong>Categoria:</strong> ${game.category}</p>
+    <br>
+    <img src="${game.image}" style="width:100%; height:250px; object-fit:cover; border-radius:12px;">
+    <br><br>
     <p>${game.description}</p>
-    <h3>R$ ${game.price.toFixed(2)}</h3>
+    <br>
     <button class="btn-primary" onclick="addToCart(${game.id}); closeModal('gameDetailModal');">Adicionar ao Carrinho</button>
   `;
   openModal('gameDetailModal');
@@ -179,7 +259,6 @@ function openGameDetail(gameId) {
 function openModal(id) { document.getElementById(id).style.display = 'block'; }
 function closeModal(id) { document.getElementById(id).style.display = 'none'; }
 
-// --- CADASTRO DE NOVOS JOGOS ---
 function handleCreateGame(e) {
   e.preventDefault();
   const newGame = {
@@ -188,6 +267,7 @@ function handleCreateGame(e) {
     category: document.getElementById('category').value,
     price: parseFloat(document.getElementById('price').value),
     image: document.getElementById('imageUrl').value,
+    game_url: document.getElementById('gameUrl').value,
     description: document.getElementById('description').value
   };
 
@@ -195,47 +275,34 @@ function handleCreateGame(e) {
   localStorage.setItem('gx_games', JSON.stringify(games));
   renderGames(games);
   showPage('storePage');
-  e.target.reset();
-  alert('Jogo publicado na loja com sucesso!');
+  alert('Jogo cadastrado na vitrine!');
 }
 
-// --- AUTENTICAÇÃO E TRATAMENTO GOOGLE ---
 function handleLogin(e) {
   const email = document.getElementById('loginEmail').value;
-  currentUser = { email: email, name: email.split('@')[0] };
+  currentUser = { name: email.split('@')[0], email };
   localStorage.setItem('gx_user', JSON.stringify(currentUser));
   updateAuthUI();
 }
 
 function handleRegister(e) {
   e.preventDefault();
-  const name = document.getElementById('regName').value;
-  const email = document.getElementById('regEmail').value;
-  currentUser = { name, email };
+  currentUser = { name: document.getElementById('regName').value, email: document.getElementById('regEmail').value };
   localStorage.setItem('gx_user', JSON.stringify(currentUser));
   updateAuthUI();
   showPage('storePage');
-  alert('Conta criada com sucesso!');
 }
 
 function handleGoogleLogin() {
-  const isCaptiveView = /wv|FBAN|FBAV|Instagram|MicroMessenger/i.test(navigator.userAgent);
-  if (isCaptiveView) {
-    alert("O Google não permite login direto na janela do Wi-Fi.\n\nPor favor, utilize o cadastro por e-mail ou abra o site no Chrome/Safari.");
-  } else {
-    alert("Redirecionando para autenticação do Google...");
-  }
+  alert("Para efetuar o login com o Google no Wi-Fi, abra a página diretamente no navegador (Chrome/Safari) do seu dispositivo.");
 }
 
 function updateAuthUI() {
-  const authArea = document.getElementById('authArea');
+  const area = document.getElementById('authArea');
   if (currentUser) {
-    authArea.innerHTML = `
-      <span>Olá, <strong>${currentUser.name}</strong></span>
-      <button class="btn-secondary" onclick="logout()">Sair</button>
-    `;
+    area.innerHTML = `<span>Olá, <strong>${currentUser.name}</strong></span> <button class="btn-secondary" onclick="logout()">Sair</button>`;
   } else {
-    authArea.innerHTML = `<button class="btn-secondary" onclick="showPage('authPage')">Entrar / Registrar</button>`;
+    area.innerHTML = `<button class="btn-secondary" onclick="showPage('authPage')">Entrar / Registrar</button>`;
   }
 }
 
@@ -243,5 +310,5 @@ function logout() {
   localStorage.removeItem('gx_user');
   currentUser = null;
   updateAuthUI();
-  showPage('storePage');
-}
+                             }
+    
