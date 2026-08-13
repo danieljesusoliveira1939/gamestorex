@@ -7,9 +7,9 @@ let games = JSON.parse(localStorage.getItem('gx_games')) || [
     title: 'Shattered Pixel Dungeon',
     category: 'RPG',
     price: 0.00,
-    image: 'https://raw.githubusercontent.com/00-Evan/shattered-pixel-dungeon/master/android/res/drawable-nodpi/banner.png',
-    description: 'Um RPG roguelike tradicional de masmorras incrivelmente divertido e completo para jogar diretamente no navegador!',
-    game_url: 'https://pux0r3.github.io/shattered-pixel-dungeonweb/'
+    image: 'eagler_logo.png',
+    description: 'Um jogo de aventura e adrenalina',
+    game_url: 'https://sandlersite.neocities.org/EaglercraftX_1.8_u29_Offline_Signed'
   }
 ];
 
@@ -311,4 +311,21 @@ function logout() {
   currentUser = null;
   updateAuthUI();
                              }
+
+// Rota para EXCLUIR um jogo pelo ID
+app.delete('/api/games/:id', (req, res) => {
+  const gameId = req.params.id;
+  const sql = 'DELETE FROM games WHERE id = ?';
+
+  db.run(sql, [gameId], function (err) {
+    if (err) {
+      return res.status(500).json({ error: err.message });
+    }
+    if (this.changes === 0) {
+      return res.status(404).json({ error: 'Jogo não encontrado.' });
+    }
+    res.json({ message: 'Jogo excluído com sucesso!', id: gameId });
+  });
+});
+                 
     
